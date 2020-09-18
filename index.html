@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="css/reset.css">
+    <link rel="stylesheet" href="css/game.css">
+    <title>Document</title>
+</head>
+<body>
+    <div class="btnBox">
+        <button id="btn1">play timeBar</button>
+        <button id="btn2">add result</button>
+        <button id="btn3">play card</button> 
+        
+        <div class="highLight">
+            <p>highLight</p>
+            <ul>
+                <li>
+                    <label>
+                        <input type="checkbox">
+                        <span>hi</span>
+                    </label>      
+                </li>
+                <li>
+                    <label>
+                        <input type="checkbox">
+                        <span>lo</span>
+                    </label>      
+                </li>
+                <li>
+                    <label>
+                        <input type="checkbox">
+                        <span>red</span>
+                    </label>              
+                </li>
+                <li>
+                    <label>
+                        <input type="checkbox">
+                        <span>black</span>
+                    </label>        
+                </li>
+                <li>
+                    <label>
+                        <input type="checkbox">
+                        <span>3~8</span>
+                    </label>       
+                </li>
+                <li>
+                    <label>
+                        <input type="checkbox">
+                        <span>j~a</span>
+                    </label>    
+                </li>
+                <li>
+                    <label>
+                        <input type="checkbox">
+                        <span>joker</span>
+                    </label>           
+                </li>
+            </ul>
+        </div>
+
+    </div>
+    <!-- =============================== -->
+
+    <div class="gameBox">
+        <!-- ===== tool start ===== -->
+        <div class="tool">
+            <div class="timeLine">
+                <p>剩餘<span>10.00</span>秒</p>
+                <div class="timeBar"></div>
+            </div>
+            <div class="menuBtn">
+                <img src="image/menuBtn.png">
+                <span>menu</span>
+            </div>
+        </div>
+
+        <!-- ===== gameHistory ===== -->
+        <div class="gameHistory">
+            <ul>
+                <li class="flower_1" data-result="0">
+                    <div class="cardIcon"></div>
+                    <span >j</span>
+                </li>
+                <li class="flower_2" data-result="1">
+                    <div class="cardIcon"></div>
+                    <span>K</span>
+                </li>
+                <li class="flower_3" data-result="2">
+                    <div class="cardIcon"></div>
+                    <span>8</span>
+                </li>
+                <li class="flower_4" data-result="3">
+                    <div class="cardIcon"></div>
+                    <span>8</span>
+                </li>
+            </ul>
+        </div>
+
+        <!-- ===== show start ===== -->
+        <div class="show">
+            <!-- show_hilo start -->
+            <div class="show_hilo">
+                <div class="show_hi">
+                    <div>
+                        <span>HI</span>
+                        <span>Q~A</span>
+                        <span>x3.50</span>
+                    </div>    
+                </div>
+                <div class="show_lo">
+                    <div>
+                        <span>LO</span>
+                        <span>2~9</span>
+                        <span>x1.50</span>
+                    </div>         
+                </div>
+            </div>
+            
+            <!-- show_poker start -->
+            <div class="show_poker">
+                <div class="show_pokerBox">
+                    <div class="cardNumber"></div>
+                    <div class="cardBack"></div>
+                </div>
+            </div>
+
+            <!-- show_odds start -->
+            <div class="show_odds">
+                <ul>
+                    <li>
+                        <div>
+                            <span>RED</span>
+                            <span>x1.98</span>
+                        </div>
+                        <div>
+                            <span>BLACK</span>
+                            <span>x1.98</span>
+                        </div>
+                    </li>
+                    <li>
+                        <div>
+                            <span>3~8</span>
+                            <span>x1.7</span>
+                        </div>
+                        <div>
+                            <span>J,Q,K,A</span>
+                            <span>x2.6</span>
+                        </div>
+                    </li>
+                    <li>
+                        <div>
+                            <span>JOKER</span>
+                            <span>x20</span>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+
+        </div>
+    </div>
+
+
+    <script src='https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.0/jquery.js'></script>
+    <script>
+        var timeBar 
+        var time = 10.00;
+
+        $('#btn1').click(function(){
+            $('.timeBar').toggleClass('on')
+
+            clearInterval(timeBar)
+            if($('.timeBar').hasClass('on')){ gotimeBar() }
+            else{
+                time = 10.00;
+                $('.timeLine span').text(time.toFixed(2))
+            }         
+        })
+  
+        function gotimeBar(){
+            time = 10.00;
+            $('.timeLine span').text(time)
+
+            timeBar = setInterval(function(){        
+                time -= 0.01
+                if(time < 0.01){clearInterval(timeBar)}
+                var nowtime = time.toFixed(2)
+                $('.timeLine span').text(nowtime)
+            },10)
+        }
+
+    
+        var cardIcon = ['A','1','2','3','4','5','6','7','8','9','10','J','Q','K']
+        $('#btn2').click(function(){
+            var cardNumber = parseInt(Math.random()*14)  
+            var cardFlower = parseInt(Math.random()*4)+1 
+            var result = parseInt(Math.random()*3)+1 
+            var addCard = `<li class='flower_${cardFlower}' data-result="${result}"><div class='cardIcon'></div><span>${cardIcon[cardNumber]}</span></li>`
+            $('.gameHistory ul').append(addCard) 
+
+            if($('.gameHistory li').length > 16){
+                $('.gameHistory li:first').remove()
+            }     
+        })
+
+        $('#btn3').click(function(){$('.cardBack').toggleClass('on') })
+        
+
+
+        $('.highLight input').click(function(){
+
+            var x = $('.highLight li').index($(this).parents('li'))  
+            $(this).parents('li').toggleClass('on')
+
+            switch(x){
+                case 0: hilo(0); break;
+                case 1: hilo(1); break;
+                case 2: odds(0); break; 
+                case 3: odds(1); break;
+                case 4: odds(2); break;
+                case 5: odds(3); break;
+                case 6: odds(4); break;
+                case 6: odds(5); break;
+            }
+
+            function hilo(e){$(`.show_hilo>div:eq(${e})`).toggleClass('on')}
+            function odds(e){$(`.show_odds div:eq(${e})`).toggleClass('on')}
+        })
+
+    </script>
+
+    
+</body>
+</html>
